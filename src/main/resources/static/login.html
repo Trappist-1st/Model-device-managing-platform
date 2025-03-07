@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 100px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        .code-group {
+            display: flex;
+            gap: 10px;
+        }
+        .code-group input {
+            flex: 1;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-group">
+            <label>用户名</label>
+            <input type="text" id="username">
+        </div>
+        <div class="form-group">
+            <label>密码</label>
+            <input type="password" id="password">
+        </div>
+        <div class="form-group code-group">
+            <input type="text" id="code" placeholder="验证码">
+            <button onclick="sendCode()">获取验证码</button>
+        </div>
+        <button onclick="login()">登录</button>
+    </div>
+
+    <script>
+        async function sendCode() {
+            const username = document.getElementById('username').value;
+            if (!username) {
+                alert('请输入用户名');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/auth/code?username=${username}`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    alert(`验证码已发送: ${data.code}`);
+                } else {
+                    alert(data);
+                }
+            } catch (error) {
+                alert('发送验证码失败');
+            }
+        }
+
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const code = document.getElementById('code').value;
+
+            if (!username || !password || !code) {
+                alert('请填写完整信息');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password, code })
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    alert('登录成功');
+                    // 这里可以存储token并跳转到主页
+                    localStorage.setItem('token', data.token);
+                    window.location.href = '/index.html';
+                } else {
+                    alert(data);
+                }
+            } catch (error) {
+                alert('登录失败');
+            }
+        }
+    </script>
+</body>
+</html> 

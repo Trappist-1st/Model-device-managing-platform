@@ -1,0 +1,42 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    primary:  # 主数据源（模型数据库）
+      jdbc-url: jdbc:mysql://localhost:3306/model_storage?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: DARTHVADER1
+    secondary:  # 次数据源（用户数据库）
+      jdbc-url: jdbc:mysql://localhost:3306/user_storage?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: DARTHVADER1
+  servlet:
+    multipart:
+      max-file-size: 1000MB
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: none # Changed to update to allow table creation and updates
+    show-sql: true
+
+ssh:
+  host: 121.43.149.193
+  port: 22
+  username: root
+  password: Hh545466093.
+  timeout: 5000  # 连接超时时间，单位毫秒
+  retry: 3       # 重试次数
+
+#下次写项目我再配成两个数据源我就是狗
+#  jpa:
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQLDialect
+#    hibernate:
+#      ddl-auto: none  # 改为none，因为表已经手动创建
+#    show-sql: true
